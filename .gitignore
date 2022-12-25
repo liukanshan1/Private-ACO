@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Byte-compiled / optimized / DLL files
+__pycache__
+
+# other
+/.ipynb_checkpoints
