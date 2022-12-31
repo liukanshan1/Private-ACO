@@ -2,8 +2,7 @@
 
 import numpy as np
 
-# Constants
-fixed_point = 8
+from eACO.utils import encrypt_nparray
 
 # [1] TSP
 
@@ -148,6 +147,7 @@ def inverseDistances(space):
     inv_distances[inv_distances == np.inf] = 0
 
     # Eta algorithm result, inverted distances
+    encrypt_nparray(inv_distances)
     return inv_distances
 
 """
