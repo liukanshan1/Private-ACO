@@ -73,7 +73,7 @@ print('Min Distance Average for the last {} results is {}'.format(n, average/n))
 
 
 # Get TSP data
-TSP = getTspData('data/berlin52.tsp')
+TSP = getTspData('../data/berlin52.tsp')
 
 # Display TSP file headers
 displayTspHeaders(TSP)

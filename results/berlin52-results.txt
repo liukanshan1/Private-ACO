@@ -8,17 +8,17 @@ NAME           : berlin52.tsp (stored in /data)
 --------------------------
  2- ALGORITHM PARAMETERS
 --------------------------
-ITERATIONS     : 50
-COLONY         : 25
+ITERATIONS     : 80
+COLONY         : 50
 ALPHA          : 1
 BETA           : 1
-DEL_TAU        : 1.5
+DEL_TAU        : 1.0
 RHO            : 0.5
 
 --------------------------
  3- RESULTS 
 --------------------------
-MIN_DISTANCES      : [15008.27835143 13929.6861055  16035.41408123]
+MIN_DISTANCES      : [14852.26655861 13929.6861055  13929.6861055 ]
 # OF RESULTS       : 3
-AVG_MIN_DISTANCE   : 14991.126179384612
+AVG_MIN_DISTANCE   : 14237.21292320147
 --------------------------
