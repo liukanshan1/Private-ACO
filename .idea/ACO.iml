@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
+    <content url="file://$MODULE_DIR$/../SOCI-in-ASS/SOCI by ASS in Py" />
     <orderEntry type="jdk" jdkName="Python 3.10 (ACO)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
