@@ -2,16 +2,17 @@
 from library import *
 import matplotlib.pyplot as plt
 
-"""
-    Run Ant Colony Optimization (ACO) algorithm for a given Symmetric traveling salesman problem (TSP)
-    @arg
-        {string} tsp    -- The TSP file src name (located in /data folder)
 
-    @export
-        {results}       -- Generated files for results
-        {plots}         -- Generated files for plots
-"""
 def test(tsp):
+    """
+        Run Ant Colony Optimization (ACO) algorithm for a given Symmetric traveling salesman problem (TSP)
+        @arg
+            {string} tsp    -- The TSP file src name (located in /data folder)
+
+        @export
+            {results}       -- Generated files for results
+            {plots}         -- Generated files for plots
+    """
     # Default arguments
     '''
         iterations {80}     -- Number of iterations (Ending condition)
@@ -60,16 +61,17 @@ def test(tsp):
     # Save results txt
     saveResultsTxt(src, results, iterations, colony, alpha, beta, del_tau, rho)
 
-"""
-    Save Space plot
-    @arg
-        {string} tsp            -- The TSP file src name
-        {numpy.ndarray} space   -- The space
 
-    @export
-        {png}                   -- Generated .png for TSP space plot
-"""
 def saveSpacePlot(tsp, space):
+    """
+        Save Space plot
+        @arg
+            {string} tsp            -- The TSP file src name
+            {numpy.ndarray} space   -- The space
+
+        @export
+            {png}                   -- Generated .png for TSP space plot
+    """
     # Plot nodes
     plt.scatter(space[:, 0], space[:, 1], s = 15)
 
@@ -88,20 +90,21 @@ def saveSpacePlot(tsp, space):
     # Inform
     msg('{} generated'.format(file))
 
-"""
-    Save Path plot for a given result
-    @arg
-        {int} i                 -- The result
-        {int} n                 -- The total results
-        {numpy.ndarray}         -- Indexes of the minimun distance path for the result
-        {float}                 -- the minimun distance for the result
-        {string} tsp            -- The TSP file src name
-        {numpy.ndarray} space   -- The space
 
-    @export
-        {png}                   -- Generated .png for ACO-TSP path result plot
-"""
 def savePathPlot(i, n, tsp, space, min_path, min_distance):
+    """
+        Save Path plot for a given result
+        @arg
+            {int} i                 -- The result
+            {int} n                 -- The total results
+            {numpy.ndarray}         -- Indexes of the minimun distance path for the result
+            {float}                 -- the minimun distance for the result
+            {string} tsp            -- The TSP file src name
+            {numpy.ndarray} space   -- The space
+
+        @export
+            {png}                   -- Generated .png for ACO-TSP path result plot
+    """
     # Plot nodes
     plt.scatter(space[:, 0], space[:, 1], marker='o', s = 15)
     plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
@@ -122,22 +125,23 @@ def savePathPlot(i, n, tsp, space, min_path, min_distance):
     # Inform
     msg('{} generated'.format(file))
 
-"""
-    Save results for a given TSP
-    @arg
-        {dict} src                  -- The TSP file src
-        {numpy.ndarray} results     -- The TSP file as dictionary
-        {int} iterations {80}       -- Number of iterations (Ending condition)
-        {int} colony {50}           -- Number of ants in the colony
-        {float} alpha {1.0}         -- Alpha algorithm parameter, more or less weight to a selected distance
-        {float} beta {1.0}          -- Beta algorithm parameter, more or less weight to a selected distance
-        {float} del_tau {1.0}       -- Delta Tau algorithm parameter, pheromones releasing rate
-        {float} rho {0.5}           -- Rho algorithm parameter, pheromones evaporation rate
 
-    @export
-        {txt}                       -- Generated .txt for ACO-TSP results
-"""
 def saveResultsTxt(src, results, iterations, colony, alpha, beta, del_tau, rho):
+    """
+        Save results for a given TSP
+        @arg
+            {dict} src                  -- The TSP file src
+            {numpy.ndarray} results     -- The TSP file as dictionary
+            {int} iterations {80}       -- Number of iterations (Ending condition)
+            {int} colony {50}           -- Number of ants in the colony
+            {float} alpha {1.0}         -- Alpha algorithm parameter, more or less weight to a selected distance
+            {float} beta {1.0}          -- Beta algorithm parameter, more or less weight to a selected distance
+            {float} del_tau {1.0}       -- Delta Tau algorithm parameter, pheromones releasing rate
+            {float} rho {0.5}           -- Rho algorithm parameter, pheromones evaporation rate
+
+        @export
+            {txt}                       -- Generated .txt for ACO-TSP results
+    """
     # Open or create
     file = 'results/{}-results.txt'.format(src['name'])
     txt = open(file, 'w+')
@@ -173,19 +177,16 @@ def saveResultsTxt(src, results, iterations, colony, alpha, beta, del_tau, rho):
     # Inform
     msg('{} generated'.format(file))
 
-"""
-    Show a console message
-    @arg
-        {string} str
-"""
+
 def msg(str):
+    """
+        Show a console message
+        @arg
+            {string} str
+    """
     print('[Testing ACO_TSP] {}'.format(str))
 
-"""
-    Show a console message
-    @arg
-        {string} str
-"""
+
 def main():
     # Test for each stored TSP data
     test('kroA100')
@@ -193,6 +194,7 @@ def main():
 
     # Inform
     msg('All files generated, see /results for details')
+
 
 if __name__ == '__main__':
     main()
