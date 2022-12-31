@@ -4,6 +4,7 @@ from ss.secret import Secret
 
 # Constants
 fixed_point = 8
+encrypted = True
 
 
 def encrypt_nparray(nparray: np.array):
@@ -16,3 +17,10 @@ def encrypt_nparray(nparray: np.array):
         for j in range(nparray.shape[1]):
             e_nparray[i, j] = Secret(nparray[i, j])
     return e_nparray
+
+
+def get_fixed_point():
+    return fixed_point
+
+def get_if_encrypted():
+    return encrypted
