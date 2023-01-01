@@ -1,5 +1,6 @@
 # [0] Libs
 from concurrent.futures import ThreadPoolExecutor
+import time
 
 import numpy as np
 
@@ -200,11 +201,11 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
         future = []
         # For each ant
         for ant in range(positions.shape[0]):
-            future.append(pool.submit(ant_move, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions))
+            f = pool.submit(ant_move, alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
+            future.append(f)
             # ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
         for f in future:
-            while not f.done():
-                pass
+            f.result()
     # Paths taken by the ants
     return np.swapaxes(paths, 0, 1)
 
