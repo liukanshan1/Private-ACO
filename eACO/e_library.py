@@ -1,7 +1,7 @@
 # [0] Libs
 import numpy as np
 
-from eACO.utils import encrypt_nparray, get_if_encrypted, get_fixed_point
+from eACO.utils import encrypt_2darray, get_if_encrypted, get_fixed_point, decrypt_array
 from ss.secret import Secret
 
 
@@ -77,14 +77,15 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
     # 只支持alpha和beta为1
     alpha = 1
     beta = 1
+    rho = int(1 / rho)
     # Find encrypted inverted distances for all nodes
-    inv_distances = inverseDistances(space)
+    inv_distances, distances = inverseDistances(space)
     # Encrypt space
-    space = encrypt_nparray(space)
+    space = encrypt_2darray(space)
     # Add beta algorithm parameter to inverted distances
     inv_distances = (inv_distances ** beta)
     # Empty pheromones trail
-    pheromones = encrypt_nparray(np.zeros((space.shape[0], space.shape[0])))
+    pheromones = encrypt_2darray(np.zeros((space.shape[0], space.shape[0])))
     # 加密参数
     del_tau = Secret(del_tau ** get_fixed_point())
 
@@ -96,14 +97,14 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
     # [2] For the number of iterations
     for i in range(iterations):
         # Initial random positions
-        positions = initializeAnts(space, colony)
+        positions = initializeAnts(space.shape, colony)
 
         # Complete a path
         # [e]space, [p]positions, [e]inv_distances, [e]pheromones, [p]alpha, [p]beta, [e]del_tau
-        paths = moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau)
+        paths = moveAnts(space.shape, positions, inv_distances, pheromones, alpha, beta, del_tau)
 
         # Evaporate pheromones
-        pheromones *= (1 - rho)
+        pheromones = pheromones / rho
 
         # [3] For each path
         for path in paths:
@@ -124,7 +125,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         min_path = np.append(min_path, min_path[0])
 
         # Return tuple
-        return (min_path, min_distance)
+        return min_path, min_distance
 
 
 def inverseDistances(space):
@@ -153,12 +154,12 @@ def inverseDistances(space):
 
     # Eta algorithm result, inverted distances
     if get_if_encrypted():
-        return encrypt_nparray(inv_distances)
+        return encrypt_2darray(inv_distances), encrypt_2darray(distances)
     else:
-        return inv_distances
+        return inv_distances, distances
 
 
-def initializeAnts(space, colony):
+def initializeAnts(space_shape, colony):
     """
         Initialize ants - Get an array of random initial positions of the ants in space
         @arg
@@ -167,10 +168,10 @@ def initializeAnts(space, colony):
         @return
             {numpy.ndarry}          -- An array of indexes of initial positions of ants in the space
     """    # Indexes of initial positions of ants
-    return np.random.randint(space.shape[0], size=colony)
+    return np.random.randint(space_shape[0], size=colony)
 
 
-def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
+def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del_tau):
     """
         Move ants - Move ants from initial positions to cover all nodes
         @arg
@@ -185,13 +186,13 @@ def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
             {numpy.ndarry}                  -- Indexes of the paths taken by the ants
     """
     # Empty multidimensional array (matriz) to paths
-    paths = np.zeros((space.shape[0], positions.shape[0]), dtype=int) - 1
+    paths = np.zeros((space_shape[0], positions.shape[0]), dtype=int) - 1
 
     # Initial position at node zero
     paths[0] = positions
 
     # For nodes after start to end
-    for node in range(1, space.shape[0]):
+    for node in range(1, space_shape[0]):
         # For each ant
         for ant in range(positions.shape[0]):
             # Probability to travel the nodes
@@ -205,7 +206,7 @@ def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
             # Check if node has already been visited
             while next_position in paths[:, ant]:
                 # Replace the probability of visited to zero
-                next_location_probability[next_position] = 0.0
+                next_location_probability[next_position] = Secret(0)
 
                 # Find the maximum probability node
                 next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]

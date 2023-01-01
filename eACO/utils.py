@@ -8,16 +8,27 @@ fixed_point = 8
 encrypted = True
 
 
-def encrypt_nparray(nparray: np.array):
+def encrypt_2darray(ndarray: np.array):
     """
     加密numpy数组
     """
-    nparray = (nparray * (10 ** fixed_point)).astype(np.int64)
-    e_nparray = np.empty(nparray.shape, dtype=Secret, order='C')
-    for i in range(nparray.shape[0]):
-        for j in range(nparray.shape[1]):
-            e_nparray[i, j] = Secret(nparray[i, j])
-    return e_nparray
+    ndarray = (ndarray * (10 ** fixed_point)).astype(np.int64)
+    e_ndarray = np.empty(ndarray.shape, dtype=Secret, order='C')
+    for i in range(ndarray.shape[0]):
+        for j in range(ndarray.shape[1]):
+            e_ndarray[i, j] = Secret(ndarray[i, j])
+    return e_ndarray
+
+
+def decrypt_array(e_array: np.array):
+    """
+    加密numpy数组
+    """
+    fp = 10 ** fixed_point
+    array = np.zeros(e_array.shape)
+    for i in range(array.shape[0]):
+        array[i] = e_array[i].recover() / fp
+    return array
 
 
 def saveSpacePlot(tsp, space):

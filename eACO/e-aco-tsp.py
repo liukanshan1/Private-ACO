@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 
 
 # Get TSP data
-TSP = getTspData('../data/kroA100.tsp')
+# TSP = getTspData('../data/kroA100.tsp')
+TSP = getTspData('../data/berlin52.tsp')
 
 # Display TSP file headers
 displayTspHeaders(TSP)
