@@ -5,7 +5,7 @@ from ss.secret import Secret
 
 # Constants
 fixed_point = 8
-encrypted = False
+encrypted = True
 
 
 def encrypt_nparray(nparray: np.array):

@@ -72,15 +72,19 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         @return
             {Tuple(numpy.ndarray, float)}   -- Indexes of the minimun distance path and the minimun distance
     """
-    # [1] Find inverted distances for all nodes
+    # 离线阶段
+    # 只支持beta为1
+    beta = 1
+    # Find encrypted inverted distances for all nodes
     inv_distances = inverseDistances(space)
+    # Encrypt space
+    space = encrypt_nparray(space)
 
+    # 在线阶段
     # Add beta algorithm parameter to inverted distances
-    inv_distances = inv_distances ** beta  # TODO 乘方操作，需要拟合
-
+    inv_distances = (inv_distances ** beta)
     # Empty pheromones trail
     pheromones = np.zeros((space.shape[0], space.shape[0]))
-
     # Empty minimum distance and path
     min_distance = None
     min_path = None
