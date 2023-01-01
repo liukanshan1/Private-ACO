@@ -109,14 +109,14 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         # [3] For each path
         for path in paths:
             # Empty distance
-            distance = 0
+            distance = Secret(0)
 
             # For each node from second to last
             for node in range(1, path.shape[0]):
                 # Calculate distance to the last node
-                distance += np.sqrt(((space[int(path[node])] - space[int(path[node - 1])]) ** 2).sum())
+                distance = distances + distances[int(path[node]), int(path[node - 1])]
 
-            # Update minimun distance and path if less nor non existent
+            # Update minimun distance and path if less nor non-existent
             if not min_distance or distance < min_distance:
                 min_distance = distance
                 min_path = path
@@ -125,7 +125,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         min_path = np.append(min_path, min_path[0])
 
         # Return tuple
-        return min_path, min_distance
+        return min_path, min_distance.recover()
 
 
 def inverseDistances(space):
