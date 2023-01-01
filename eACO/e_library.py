@@ -124,8 +124,8 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         # Copy and append first node to end of minimum path to form closed path
         min_path = np.append(min_path, min_path[0])
 
-        # Return tuple
-        return min_path, min_distance.recover()
+    # Return tuple
+    return min_path, min_distance.recover()
 
 
 def inverseDistances(space):
