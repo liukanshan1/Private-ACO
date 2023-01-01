@@ -77,7 +77,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
     # 只支持alpha和beta为1
     alpha = 1
     beta = 1
-    rho = int(1 / rho)
+    rho = Secret(int(1 / rho))
     # Find encrypted inverted distances for all nodes
     inv_distances, distances = inverseDistances(space)
     # Encrypt space
