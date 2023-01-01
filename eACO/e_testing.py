@@ -1,5 +1,5 @@
 from eACO.utils import saveSpacePlot, savePathPlot, saveResultsTxt, msg
-from library import *
+from e_library import *
 
 
 def test(tsp):

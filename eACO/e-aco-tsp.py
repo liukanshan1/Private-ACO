@@ -1,4 +1,4 @@
-from library import *
+from e_library import *
 import matplotlib.pyplot as plt
 
 

@@ -1,7 +1,8 @@
 # [0] Libs
 import numpy as np
 
-from eACO.utils import encrypt_nparray, get_if_encrypted
+from eACO.utils import encrypt_nparray, get_if_encrypted, get_fixed_point
+from ss.secret import Secret
 
 
 # [1] TSP
@@ -72,19 +73,22 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         @return
             {Tuple(numpy.ndarray, float)}   -- Indexes of the minimun distance path and the minimun distance
     """
-    # 离线阶段
-    # 只支持beta为1
+    # 本地阶段
+    # 只支持alpha和beta为1
+    alpha = 1
     beta = 1
     # Find encrypted inverted distances for all nodes
     inv_distances = inverseDistances(space)
     # Encrypt space
     space = encrypt_nparray(space)
-
-    # 在线阶段
     # Add beta algorithm parameter to inverted distances
     inv_distances = (inv_distances ** beta)
     # Empty pheromones trail
-    pheromones = np.zeros((space.shape[0], space.shape[0]))
+    pheromones = encrypt_nparray(np.zeros((space.shape[0], space.shape[0])))
+    # 加密参数
+    del_tau = Secret(del_tau ** get_fixed_point())
+
+    # 在线阶段
     # Empty minimum distance and path
     min_distance = None
     min_path = None
@@ -95,6 +99,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         positions = initializeAnts(space, colony)
 
         # Complete a path
+        # [e]space, [p]positions, [e]inv_distances, [e]pheromones, [p]alpha, [p]beta, [e]del_tau
         paths = moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau)
 
         # Evaporate pheromones
