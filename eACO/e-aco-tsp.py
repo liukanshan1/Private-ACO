@@ -1,6 +1,7 @@
 from e_library import *
 import matplotlib.pyplot as plt
 
+from utils.stopwatch import Stopwatch
 
 # Get TSP data
 # TSP = getTspData('../data/kroA100.tsp')
@@ -27,9 +28,12 @@ plt.ylabel('Longitude')
 plt.show()
 plt.close()
 
-
+sw = Stopwatch(3)
+sw.start()
 # Run ACO
 min_path, min_distance = runAcoTsp(space)
+sw.stop()
+print(sw)
 
 # Plot path
 plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
@@ -44,3 +48,5 @@ plt.ylabel('Longitude')
 # Show plot
 plt.show()
 plt.close()
+
+print(min_distance)
