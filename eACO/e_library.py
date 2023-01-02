@@ -1,4 +1,7 @@
 # [0] Libs
+from concurrent.futures import ThreadPoolExecutor
+import time
+
 import numpy as np
 
 from eACO.utils import encrypt_2darray, get_if_encrypted, get_fixed_point, decrypt_array
@@ -185,6 +188,8 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
         @return
             {numpy.ndarry}                  -- Indexes of the paths taken by the ants
     """
+    pool = ThreadPoolExecutor(max_workers=12)
+
     # Empty multidimensional array (matriz) to paths
     paths = np.zeros((space_shape[0], positions.shape[0]), dtype=int) - 1
 
@@ -193,29 +198,33 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
 
     # For nodes after start to end
     for node in range(1, space_shape[0]):
+        future = []
         # For each ant
         for ant in range(positions.shape[0]):
-            # Probability to travel the nodes
-            next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
-                                         inv_distances[positions[ant]].sum() ** alpha + pheromones[
-                                             positions[ant]].sum() ** beta)
-
-            # Index to maximum probability node
-            next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
-
-            # Check if node has already been visited
-            while next_position in paths[:, ant]:
-                # Replace the probability of visited to zero
-                next_location_probability[next_position] = Secret(0)
-
-                # Find the maximum probability node
-                next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
-
-            # Add node to path
-            paths[node, ant] = next_position
-
-            # Update pheromones (releasing pheromones)
-            pheromones[node, next_position] = pheromones[node, next_position] + del_tau
-
+            f = pool.submit(ant_move, alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
+            future.append(f)
+            # ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
+        for f in future:
+            f.result()
     # Paths taken by the ants
     return np.swapaxes(paths, 0, 1)
+
+
+def ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions):
+    # Probability to travel the nodes
+    next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
+                                 inv_distances[positions[ant]].sum() ** alpha + pheromones[
+                                     positions[ant]].sum() ** beta)
+    # Index to maximum probability node
+    next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
+    # Check if node has already been visited
+    while next_position in paths[:, ant]:
+        # Replace the probability of visited to zero
+        next_location_probability[next_position] = Secret(0)
+
+        # Find the maximum probability node
+        next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
+    # Add node to path
+    paths[node, ant] = next_position
+    # Update pheromones (releasing pheromones)
+    pheromones[node, next_position] = pheromones[node, next_position] + del_tau
