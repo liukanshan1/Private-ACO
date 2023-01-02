@@ -114,7 +114,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
             # For each node from second to last
             for node in range(1, path.shape[0]):
                 # Calculate distance to the last node
-                distance = distances[int(path[node]), int(path[node - 1])] + distance # TODO 重载自加
+                distance += distances[int(path[node]), int(path[node - 1])]
 
             # Update minimun distance and path if less nor non-existent
             if not min_distance or distance < min_distance:
