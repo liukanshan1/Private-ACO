@@ -83,8 +83,6 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
     rho = Secret(int(1 / rho))
     # Find encrypted inverted distances for all nodes
     inv_distances, distances = inverseDistances(space)
-    # Encrypt space
-    space = encrypt_2darray(space)
     # Add beta algorithm parameter to inverted distances
     inv_distances = (inv_distances ** beta)
     # Empty pheromones trail
@@ -112,21 +110,17 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         # [3] For each path
         for path in paths:
             # Empty distance
-            distance = Secret(0)
-
+            distance = 0
             # For each node from second to last
             for node in range(1, path.shape[0]):
                 # Calculate distance to the last node
-                distance = distance + distances[int(path[node]), int(path[node - 1])]
+                distance = distances[int(path[node]), int(path[node - 1])] + distance # TODO 重载自加
 
             # Update minimun distance and path if less nor non-existent
             if not min_distance or distance < min_distance:
                 min_distance = distance
                 min_path = path
-
-        # Copy and append first node to end of minimum path to form closed path
-        min_path = np.append(min_path, min_path[0])
-
+                min_path = np.append(min_path, min_path[0])
     # Return tuple
     return min_path, min_distance.recover()/pow(10, get_fixed_point())
 
@@ -188,7 +182,7 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
         @return
             {numpy.ndarry}                  -- Indexes of the paths taken by the ants
     """
-    pool = ThreadPoolExecutor(max_workers=12)
+    # pool = ThreadPoolExecutor(max_workers=12)
 
     # Empty multidimensional array (matriz) to paths
     paths = np.zeros((space_shape[0], positions.shape[0]), dtype=int) - 1
@@ -198,14 +192,14 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
 
     # For nodes after start to end
     for node in range(1, space_shape[0]):
-        future = []
+        # future = []
         # For each ant
         for ant in range(positions.shape[0]):
-            f = pool.submit(ant_move, alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
-            future.append(f)
-            # ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
-        for f in future:
-            f.result()
+            # f = pool.submit(ant_move, alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
+            # future.append(f)
+            ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
+        # for f in future:
+        #     f.result()
     # Paths taken by the ants
     return np.swapaxes(paths, 0, 1)
 
@@ -214,16 +208,16 @@ def ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, 
     # Probability to travel the nodes
     next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
                                  inv_distances[positions[ant]].sum() ** alpha + pheromones[
-                                     positions[ant]].sum() ** beta)
+                                     positions[ant]].sum() ** beta) # TODO batch
     # Index to maximum probability node
-    next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
+    next_position = np.argmax(next_location_probability)
     # Check if node has already been visited
     while next_position in paths[:, ant]:
         # Replace the probability of visited to zero
         next_location_probability[next_position] = Secret(0)
 
         # Find the maximum probability node
-        next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
+        next_position = np.argmax(next_location_probability)
     # Add node to path
     paths[node, ant] = next_position
     # Update pheromones (releasing pheromones)

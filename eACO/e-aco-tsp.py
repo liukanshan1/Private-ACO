@@ -1,7 +1,6 @@
+from eACO.stopwatch import Stopwatch
 from e_library import *
 import matplotlib.pyplot as plt
-
-from utils.stopwatch import Stopwatch
 
 # Get TSP data
 # TSP = getTspData('../data/kroA100.tsp')
@@ -32,6 +31,7 @@ sw = Stopwatch(3)
 sw.start()
 # Run ACO
 min_path, min_distance = runAcoTsp(space)
+print(min_path.shape)
 sw.stop()
 print(sw)
 
