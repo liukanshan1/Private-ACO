@@ -122,8 +122,9 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1, r
                 min_distance = distance
                 min_path = path
                 min_path = np.append(min_path, min_path[0])
+        print('Iteration: ', i, " ", min_distance.recover() / get_fp())
     # Return tuple
-    return min_path, min_distance.recover() / pow(10, get_fixed_point())
+    return min_path, min_distance.recover() / get_fp()
 
 
 def inverseDistances(space):
