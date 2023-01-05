@@ -231,4 +231,4 @@ def ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, 
     # Add node to path
     paths[node, ant] = next_position
     # Update pheromones (releasing pheromones)
-    pheromones[node, next_position] = pheromones[node, next_position] + del_tau
+    pheromones[node, next_position] += del_tau
