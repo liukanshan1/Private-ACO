@@ -24,8 +24,8 @@ plt.xlabel('Latitude')
 plt.ylabel('Longitude')
 
 # Show plot
-plt.show()
-plt.close()
+# plt.show()
+# plt.close()
 
 sw = Stopwatch(3)
 sw.start()

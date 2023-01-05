@@ -12,7 +12,8 @@ def encrypt_2darray(ndarray: np.array):
     """
     加密numpy数组
     """
-    ndarray = (ndarray * (10 ** fixed_point)).astype(np.int64)
+    fp = 10 ** fixed_point
+    ndarray = (ndarray * fp).astype(np.int64)
     e_ndarray = np.empty(ndarray.shape, dtype=Secret, order='C')
     for i in range(ndarray.shape[0]):
         for j in range(ndarray.shape[1]):
@@ -22,12 +23,21 @@ def encrypt_2darray(ndarray: np.array):
 
 def decrypt_array(e_array: np.array):
     """
-    加密numpy数组
+    解密numpy数组
     """
     fp = 10 ** fixed_point
     array = np.zeros(e_array.shape)
     for i in range(array.shape[0]):
         array[i] = e_array[i].recover() / fp
+    return array
+
+
+def decrypt_2darray(e_2darray: np.array):
+    fp = 10 ** fixed_point
+    array = np.zeros(e_2darray.shape)
+    for i in range(array.shape[0]):
+        for j in range(array.shape[1]):
+            array[i, j] = e_2darray[i, j].recover() / fp
     return array
 
 

@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 
-from eACO.utils import encrypt_2darray, get_if_encrypted, get_fixed_point, decrypt_array
+from eACO.utils import encrypt_2darray, get_if_encrypted, get_fixed_point, decrypt_array, decrypt_2darray
 from ss.secret import Secret
 
 
@@ -62,7 +62,7 @@ def displayTspHeaders(dict):
 
 
 # [2] ACO
-def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0, rho=0.5):
+def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1, rho=0.5):
     """
         Run Ant Colony Optimization (ACO) algorithm for a given Symmetric traveling salesman problem (TSP) space and data
         @arg
@@ -88,8 +88,8 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
     # Empty pheromones trail
     pheromones = encrypt_2darray(np.zeros((space.shape[0], space.shape[0])))
     # 加密参数
-    del_tau = Secret(del_tau ** get_fixed_point())
-
+    fp = 10 ** get_fixed_point()
+    del_tau = Secret(del_tau * fp)
     # 在线阶段
     # Empty minimum distance and path
     min_distance = None
@@ -104,8 +104,10 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1.0,
         # [e]space, [p]positions, [e]inv_distances, [e]pheromones, [p]alpha, [p]beta, [e]del_tau
         paths = moveAnts(space.shape, positions, inv_distances, pheromones, alpha, beta, del_tau)
 
+        test = decrypt_2darray(pheromones)
         # Evaporate pheromones
         pheromones = pheromones / rho
+        test = decrypt_2darray(pheromones)
 
         # [3] For each path
         for path in paths:
@@ -130,7 +132,6 @@ def inverseDistances(space):
         Inverse distance - Get an array of inverted distances
         @arg
             {numpy.ndarray} space   -- The space
-
         @return
             {numpy.ndarray}         -- A space.dimension per space.dimension array of inverse distances
     """
@@ -150,10 +151,7 @@ def inverseDistances(space):
     inv_distances[inv_distances == np.inf] = 0
 
     # Eta algorithm result, inverted distances
-    if get_if_encrypted():
-        return encrypt_2darray(inv_distances), encrypt_2darray(distances)
-    else:
-        return inv_distances, distances
+    return encrypt_2darray(inv_distances), encrypt_2darray(distances)
 
 
 def initializeAnts(space_shape, colony):
@@ -164,7 +162,8 @@ def initializeAnts(space_shape, colony):
             {int} colony            -- Number of ants in the colony
         @return
             {numpy.ndarry}          -- An array of indexes of initial positions of ants in the space
-    """    # Indexes of initial positions of ants
+    """
+    # Indexes of initial positions of ants
     return np.random.randint(space_shape[0], size=colony)
 
 
