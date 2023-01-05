@@ -2,51 +2,53 @@ from eACO.stopwatch import Stopwatch
 from e_library import *
 import matplotlib.pyplot as plt
 
-# Get TSP data
-# TSP = getTspData('../data/kroA100.tsp')
-TSP = getTspData('../data/berlin52.tsp')
 
-# Display TSP file headers
-displayTspHeaders(TSP)
+if __name__ == '__main__':
+    # Get TSP data
+    # TSP = getTspData('../data/kroA100.tsp')
+    TSP = getTspData('../data/berlin52.tsp')
 
-# ### Space
-# We can use now its coordenates pairs to plot nodes, this representation is what is called **space**.
+    # Display TSP file headers
+    displayTspHeaders(TSP)
 
-# Get Space
-space = np.array(TSP['node_coord_section'])
+    # ### Space
+    # We can use now its coordenates pairs to plot nodes, this representation is what is called **space**.
 
-# Plot nodes
-plt.scatter(space[:, 0], space[:, 1], s = 15)
+    # Get Space
+    space = np.array(TSP['node_coord_section'])
 
-# Plot properties
-plt.title('Space {}'.format(TSP['name']))
-plt.xlabel('Latitude')
-plt.ylabel('Longitude')
+    # Plot nodes
+    plt.scatter(space[:, 0], space[:, 1], s = 15)
 
-# Show plot
-# plt.show()
-# plt.close()
+    # Plot properties
+    plt.title('Space {}'.format(TSP['name']))
+    plt.xlabel('Latitude')
+    plt.ylabel('Longitude')
 
-sw = Stopwatch(3)
-sw.start()
-# Run ACO
-min_path, min_distance = runAcoTsp(space)
-print(min_path.shape)
-sw.stop()
-print(sw)
+    # Show plot
+    # plt.show()
+    # plt.close()
 
-# Plot path
-plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
-plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
+    sw = Stopwatch(3)
+    sw.start()
+    # Run ACO
+    min_path, min_distance = runAcoTsp(space)
+    print(min_path.shape)
+    sw.stop()
+    print(sw)
 
-# Plot properties
-plt.suptitle('Mininum Path')
-plt.title('For a minimum distance of {}'.format(min_distance), fontsize = 10)
-plt.xlabel('Latitude')
-plt.ylabel('Longitude')
+    # Plot path
+    plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
+    plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
 
-# Show plot
-plt.show()
-plt.close()
+    # Plot properties
+    plt.suptitle('Mininum Path')
+    plt.title('For a minimum distance of {}'.format(min_distance), fontsize = 10)
+    plt.xlabel('Latitude')
+    plt.ylabel('Longitude')
 
-print(min_distance)
+    # Show plot
+    plt.show()
+    plt.close()
+
+    print(min_distance)
