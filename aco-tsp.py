@@ -93,7 +93,7 @@ import matplotlib.pyplot as plt
 
 
 # Get TSP data
-TSP = getTspData('data/kroA100.tsp')
+TSP = getTspData('data/berlin52.tsp')
 
 # Display TSP file headers
 displayTspHeaders(TSP)
@@ -177,127 +177,127 @@ plt.close()
 # In[5]:
 
 
-# Vars
-n = 3 
-average = 0 
-
-# Repeat
-for i in range(n):
-    # Call
-    min_path, min_distance = runAcoTsp(space)
-    average += min_distance 
-    
-    # Plot path
-    plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
-    plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
-
-    # Plot properties
-    plt.suptitle('Mininum Path for {}'.format(TSP['name']))
-    plt.title('Result #{} of {} for a minimum distance of {}'.format(i + 1, n, min_distance), fontsize = 10)
-    plt.xlabel('Latitude')
-    plt.ylabel('Longitude')
-        
-    plt.show()
-    plt.close()
-    
-# Show Average
-print('Min Distance Average for the last {} results is {}'.format(n, average/n))
-
-
-# ### Extras
-# The same functions can be used to and additional results for **52 locations in Berlin** (`berlin52.tsp`) by *Groetschel* but using a differente set of algorithm parameters.
-
-# In[6]:
-
-
-# Get TSP data
-TSP = getTspData('data/berlin52.tsp')
-
-# Display TSP file headers
-displayTspHeaders(TSP)
-
-# Get Space
-space = np.array(TSP['node_coord_section'])
-
-# Plot nodes
-plt.scatter(space[:, 0], space[:, 1], s = 15)
-
-# Plot properties
-plt.title('Space {}'.format(TSP['name']))
-plt.xlabel('Latitude')
-plt.ylabel('Longitude')
-
-# Show plot
-plt.show()
-plt.close()
-
-# Algorithm Parameters
-iterations = 50
-colony = 25
-alpha = 1
-beta = 1
-del_tau = 1.5
-rho = 0.5
-
-# Vars
-average = 0 
-
-# Repeat
-for i in range(n):
-    # Run
-    min_path, min_distance = runAcoTsp(space, iterations, colony, alpha, beta, del_tau, rho)
-    average += min_distance
-    
-    # Plot path
-    plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
-    plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
-
-    # Plot properties
-    plt.suptitle('Mininum Path for {}'.format(TSP['name']))
-    plt.title('Result #{} of {} for a minimum distance of {}'.format(i + 1, n, min_distance), fontsize = 10)
-    plt.xlabel('Latitude')
-    plt.ylabel('Longitude')
-        
-    plt.show()
-    plt.close()
-    
-# Show Average
-print('Min Distance Average for the last {} results is {}'.format(n, average/n))
-
-
-# ### Generate files 
-# Additionally, within our **library.py** there is also a **testing.py**, by typing in console:
-# 
-# ```sh
-#   py testing.py
-# ```
-# 
-# We are going to get generated files for a number *n* of results:
-# 
-# * `tsp-space.png` - With the nodes representation
-# * `tsp-path-n.png` - For each path result
-# * `tsp-results.txt` - For a summary of results (min_distances) + average (avg_min_distance)  result
-# 
-# The command will output some contextual messages ir order to know the execution process: 
-# 
-# ```sh 
-#     [Testing ACO_TSP] Computing 3 times for kroA100
-#     [Testing ACO_TSP] results/kroA100-space.png generated
-#     [Testing ACO_TSP] results/kroA100-path-1.png generated
-#     [Testing ACO_TSP] results/kroA100-path-2.png generated
-#     [Testing ACO_TSP] results/kroA100-path-3.png generated
-#     [Testing ACO_TSP] results/kroA100-results.txt generated
-#     [Testing ACO_TSP] Computing 3 times for berlin52
-#     [Testing ACO_TSP] results/berlin52-space.png generated
-#     [Testing ACO_TSP] results/berlin52-path-1.png generated
-#     [Testing ACO_TSP] results/berlin52-path-2.png generated
-#     [Testing ACO_TSP] results/berlin52-path-3.png generated
-#     [Testing ACO_TSP] results/berlin52-results.txt generated
-#     [Testing ACO_TSP] All files generated, see /results for details
-# ```
-# 
-# All those generated files, will be availables at `/results` in projects root. 
-# 
-
-# ### Source code
-# All code has been deployed at *Github* and its available at [yammadev/aco-tsp](https://github.com/yammadev/aco-tsp). 
+# # Vars
+# n = 3
+# average = 0
+#
+# # Repeat
+# for i in range(n):
+#     # Call
+#     min_path, min_distance = runAcoTsp(space)
+#     average += min_distance
+#
+#     # Plot path
+#     plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
+#     plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
+#
+#     # Plot properties
+#     plt.suptitle('Mininum Path for {}'.format(TSP['name']))
+#     plt.title('Result #{} of {} for a minimum distance of {}'.format(i + 1, n, min_distance), fontsize = 10)
+#     plt.xlabel('Latitude')
+#     plt.ylabel('Longitude')
+#
+#     plt.show()
+#     plt.close()
+#
+# # Show Average
+# print('Min Distance Average for the last {} results is {}'.format(n, average/n))
+#
+#
+# # ### Extras
+# # The same functions can be used to and additional results for **52 locations in Berlin** (`berlin52.tsp`) by *Groetschel* but using a differente set of algorithm parameters.
+#
+# # In[6]:
+#
+#
+# # Get TSP data
+# TSP = getTspData('data/berlin52.tsp')
+#
+# # Display TSP file headers
+# displayTspHeaders(TSP)
+#
+# # Get Space
+# space = np.array(TSP['node_coord_section'])
+#
+# # Plot nodes
+# plt.scatter(space[:, 0], space[:, 1], s = 15)
+#
+# # Plot properties
+# plt.title('Space {}'.format(TSP['name']))
+# plt.xlabel('Latitude')
+# plt.ylabel('Longitude')
+#
+# # Show plot
+# plt.show()
+# plt.close()
+#
+# # Algorithm Parameters
+# iterations = 50
+# colony = 25
+# alpha = 1
+# beta = 1
+# del_tau = 1.5
+# rho = 0.5
+#
+# # Vars
+# average = 0
+#
+# # Repeat
+# for i in range(n):
+#     # Run
+#     min_path, min_distance = runAcoTsp(space, iterations, colony, alpha, beta, del_tau, rho)
+#     average += min_distance
+#
+#     # Plot path
+#     plt.scatter(space[:, 0], space[:, 1], marker='o', s=15)
+#     plt.plot(space[min_path, 0], space[min_path, 1], c='g', linewidth=0.8, linestyle="--")
+#
+#     # Plot properties
+#     plt.suptitle('Mininum Path for {}'.format(TSP['name']))
+#     plt.title('Result #{} of {} for a minimum distance of {}'.format(i + 1, n, min_distance), fontsize = 10)
+#     plt.xlabel('Latitude')
+#     plt.ylabel('Longitude')
+#
+#     plt.show()
+#     plt.close()
+#
+# # Show Average
+# print('Min Distance Average for the last {} results is {}'.format(n, average/n))
+#
+#
+# # ### Generate files
+# # Additionally, within our **library.py** there is also a **testing.py**, by typing in console:
+# #
+# # ```sh
+# #   py testing.py
+# # ```
+# #
+# # We are going to get generated files for a number *n* of results:
+# #
+# # * `tsp-space.png` - With the nodes representation
+# # * `tsp-path-n.png` - For each path result
+# # * `tsp-results.txt` - For a summary of results (min_distances) + average (avg_min_distance)  result
+# #
+# # The command will output some contextual messages ir order to know the execution process:
+# #
+# # ```sh
+# #     [Testing ACO_TSP] Computing 3 times for kroA100
+# #     [Testing ACO_TSP] results/kroA100-space.png generated
+# #     [Testing ACO_TSP] results/kroA100-path-1.png generated
+# #     [Testing ACO_TSP] results/kroA100-path-2.png generated
+# #     [Testing ACO_TSP] results/kroA100-path-3.png generated
+# #     [Testing ACO_TSP] results/kroA100-results.txt generated
+# #     [Testing ACO_TSP] Computing 3 times for berlin52
+# #     [Testing ACO_TSP] results/berlin52-space.png generated
+# #     [Testing ACO_TSP] results/berlin52-path-1.png generated
+# #     [Testing ACO_TSP] results/berlin52-path-2.png generated
+# #     [Testing ACO_TSP] results/berlin52-path-3.png generated
+# #     [Testing ACO_TSP] results/berlin52-results.txt generated
+# #     [Testing ACO_TSP] All files generated, see /results for details
+# # ```
+# #
+# # All those generated files, will be availables at `/results` in projects root.
+# #
+#
+# # ### Source code
+# # All code has been deployed at *Github* and its available at [yammadev/aco-tsp](https://github.com/yammadev/aco-tsp).

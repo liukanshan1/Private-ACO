@@ -105,7 +105,7 @@ def runAcoTsp(space, iterations = 80, colony = 50, alpha = 1.0, beta = 1.0, del_
             for node in range(1, path.shape[0]):
                 # Calculate distance to the last node
                 distance += np.sqrt(((space[int(path[node])] - space[int(path[node - 1])]) ** 2).sum())
-
+            print(distance)
             # Update minimun distance and path if less nor non existent
             if not min_distance or distance < min_distance:
                 min_distance = distance
@@ -113,9 +113,9 @@ def runAcoTsp(space, iterations = 80, colony = 50, alpha = 1.0, beta = 1.0, del_
 
         # Copy and append first node to end of minimum path to form closed path
         min_path = np.append(min_path, min_path[0])
-
-        # Return tuple
-        return (min_path, min_distance)
+        print(i, "th:", min_distance)
+    # Return tuple
+    return (min_path, min_distance)
 
 """
     Inverse distance - Get an array of inverted distances
@@ -183,11 +183,12 @@ def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
         # For each ant
         for ant in range(positions.shape[0]):
             # Probability to travel the nodes
-            next_location_probability = ((inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta) /
-                                            (inv_distances[positions[ant]].sum() ** alpha + pheromones[positions[ant]].sum() ** beta))
+            next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
+                                         inv_distances[positions[ant]].sum() ** alpha + pheromones[
+                                             positions[ant]].sum() ** beta)
 
             # Index to maximum probability node
-            next_position = np.argmax(next_location_probability)
+            next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
 
             # Check if node has already been visited
             while next_position in paths[:, ant]:
