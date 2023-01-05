@@ -1,7 +1,3 @@
-# [0] Libs
-from concurrent.futures import ThreadPoolExecutor
-import time
-
 import numpy as np
 
 from eACO.utils import encrypt_2darray, get_fixed_point, decrypt_array, decrypt_2darray, get_fp
@@ -181,7 +177,6 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
         @return
             {numpy.ndarry}                  -- Indexes of the paths taken by the ants
     """
-    # pool = ThreadPoolExecutor(max_workers=12)
 
     # Empty multidimensional array (matriz) to paths
     paths = np.zeros((space_shape[0], positions.shape[0]), dtype=int) - 1
@@ -194,11 +189,7 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
         # future = []
         # For each ant
         for ant in range(positions.shape[0]):
-            # f = pool.submit(ant_move, alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
-            # future.append(f)
             ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions)
-        # for f in future:
-        #     f.result()
     # Paths taken by the ants
     return np.swapaxes(paths, 0, 1)
 
