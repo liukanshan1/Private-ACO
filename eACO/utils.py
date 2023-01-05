@@ -20,6 +20,18 @@ def encrypt_2darray(ndarray: np.array):
     return e_ndarray
 
 
+def r_encrypt_2darray(ndarray: np.array):
+    """
+    加密numpy数组
+    """
+    ndarray = ndarray.astype(np.int64)
+    e_ndarray = np.empty(ndarray.shape, dtype=Secret, order='C')
+    for i in range(ndarray.shape[0]):
+        for j in range(ndarray.shape[1]):
+            e_ndarray[i, j] = Secret(ndarray[i, j])
+    return e_ndarray
+
+
 def decrypt_array(e_array: np.array):
     """
     解密numpy数组

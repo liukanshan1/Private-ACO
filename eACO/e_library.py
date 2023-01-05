@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 
-from eACO.utils import encrypt_2darray, get_fixed_point, decrypt_array, decrypt_2darray, get_fp
+from eACO.utils import encrypt_2darray, get_fixed_point, decrypt_array, decrypt_2darray, get_fp, r_encrypt_2darray
 from ss.secret import Secret
 
 
@@ -116,15 +116,15 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1, r
             for node in range(1, path.shape[0]):
                 # Calculate distance to the last node
                 distance += distances[int(path[node]), int(path[node - 1])]
-
+            print(distance.recover())
             # Update minimun distance and path if less nor non-existent
             if not min_distance or distance < min_distance:
                 min_distance = distance
                 min_path = path
                 min_path = np.append(min_path, min_path[0])
-        print('Iteration: ', i, " ", min_distance.recover() / get_fp())
+        print('Iteration: ', i, " ", min_distance.recover())
     # Return tuple
-    return min_path, min_distance.recover() / get_fp()
+    return min_path, min_distance.recover()
 
 
 def inverseDistances(space):
@@ -151,7 +151,7 @@ def inverseDistances(space):
     inv_distances[inv_distances == np.inf] = 0
 
     # Eta algorithm result, inverted distances
-    return encrypt_2darray(inv_distances), encrypt_2darray(distances)
+    return encrypt_2darray(inv_distances), r_encrypt_2darray(distances)
 
 
 def initializeAnts(space_shape, colony):
