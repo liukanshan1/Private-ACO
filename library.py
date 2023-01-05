@@ -183,11 +183,11 @@ def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
         # For each ant
         for ant in range(positions.shape[0]):
             # Probability to travel the nodes
-            next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
-                                            inv_distances[positions[ant]].sum() ** alpha + pheromones[positions[ant]].sum() ** beta)
+            next_location_probability = ((inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta) /
+                                            (inv_distances[positions[ant]].sum() ** alpha + pheromones[positions[ant]].sum() ** beta))
 
             # Index to maximum probability node
-            next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
+            next_position = np.argmax(next_location_probability)
 
             # Check if node has already been visited
             while next_position in paths[:, ant]:

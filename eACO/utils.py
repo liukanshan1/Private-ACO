@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 from ss.secret import Secret
 
 # Constants
-fixed_point = 8
-encrypted = True
+fixed_point = 5
+fp = pow(10, fixed_point)
 
 
 def encrypt_2darray(ndarray: np.array):
     """
     加密numpy数组
     """
-    fp = 10 ** fixed_point
     ndarray = (ndarray * fp).astype(np.int64)
     e_ndarray = np.empty(ndarray.shape, dtype=Secret, order='C')
     for i in range(ndarray.shape[0]):
@@ -25,7 +24,6 @@ def decrypt_array(e_array: np.array):
     """
     解密numpy数组
     """
-    fp = 10 ** fixed_point
     array = np.zeros(e_array.shape)
     for i in range(array.shape[0]):
         array[i] = e_array[i].recover() / fp
@@ -33,7 +31,6 @@ def decrypt_array(e_array: np.array):
 
 
 def decrypt_2darray(e_2darray: np.array):
-    fp = 10 ** fixed_point
     array = np.zeros(e_2darray.shape)
     for i in range(array.shape[0]):
         for j in range(array.shape[1]):
@@ -170,5 +167,5 @@ def get_fixed_point():
     return fixed_point
 
 
-def get_if_encrypted():
-    return encrypted
+def get_fp():
+    return fp

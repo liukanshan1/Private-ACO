@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 
-from eACO.utils import encrypt_2darray, get_if_encrypted, get_fixed_point, decrypt_array, decrypt_2darray
+from eACO.utils import encrypt_2darray, get_fixed_point, decrypt_array, decrypt_2darray, get_fp
 from ss.secret import Secret
 
 
@@ -97,6 +97,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1, r
 
     # [2] For the number of iterations
     for i in range(iterations):
+        print('Iteration: ', i)
         # Initial random positions
         positions = initializeAnts(space.shape, colony)
 
@@ -122,7 +123,7 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1, r
                 min_path = path
                 min_path = np.append(min_path, min_path[0])
     # Return tuple
-    return min_path, min_distance.recover()/pow(10, get_fixed_point())
+    return min_path, min_distance.recover() / pow(10, get_fixed_point())
 
 
 def inverseDistances(space):
@@ -203,9 +204,20 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
 
 def ant_move(alpha, ant, beta, del_tau, inv_distances, node, paths, pheromones, positions):
     # Probability to travel the nodes
-    next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
-                                 inv_distances[positions[ant]].sum() ** alpha + pheromones[
-                                     positions[ant]].sum() ** beta) # TODO batch
+    # next_location_probability0 = ((inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta) * get_fp())/(inv_distances[positions[ant]].sum() ** alpha + pheromones[positions[ant]].sum() ** beta)
+    next_location_probability = inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta
+    for i in range(next_location_probability.shape[0]):
+        next_location_probability[i] *= get_fp()
+    temp1 = Secret(0)
+    for item in inv_distances[positions[ant]]:
+        temp1 += item ** alpha
+    temp2 = Secret(0)
+    for item in pheromones[positions[ant]]:
+        temp2 += item ** beta
+    temp1 += temp2
+    for i in range(next_location_probability.shape[0]):
+        next_location_probability[i] = next_location_probability[i].fast_div(temp1)[0]
+
     # Index to maximum probability node
     next_position = np.argmax(next_location_probability)
     # Check if node has already been visited
