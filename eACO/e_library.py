@@ -104,10 +104,8 @@ def runAcoTsp(space, iterations=80, colony=50, alpha=1.0, beta=1.0, del_tau=1, r
         # [e]space, [p]positions, [e]inv_distances, [e]pheromones, [p]alpha, [p]beta, [e]del_tau
         paths = moveAnts(space.shape, positions, inv_distances, pheromones, alpha, beta, del_tau)
 
-        test = decrypt_2darray(pheromones)
         # Evaporate pheromones
         pheromones = pheromones / rho
-        test = decrypt_2darray(pheromones)
 
         # [3] For each path
         for path in paths:
