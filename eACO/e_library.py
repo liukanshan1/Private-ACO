@@ -196,7 +196,7 @@ def moveAnts(space_shape, positions, inv_distances, pheromones, alpha, beta, del
         while not queue.empty():
             res = queue.get()
             paths[res[0], res[1]] = res[2]
-            pheromones[res[0], res[2]] += del_tau
+            pheromones[res[0], res[2]] += res[3]
     # Paths taken by the ants
     return np.swapaxes(paths, 0, 1)
 
@@ -229,4 +229,4 @@ def ant_move(alpha, ant, beta, inv_distances, node, paths, pheromones, positions
     # paths[node, ant] = next_position
     # # Update pheromones (releasing pheromones)
     # pheromones[node, next_position] += del_tau
-    queue.put([node, ant, next_position])
+    queue.put([node, ant, next_position, inv_distances[positions[ant], node]])

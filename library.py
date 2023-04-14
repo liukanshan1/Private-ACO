@@ -1,4 +1,4 @@
-# [0] Libs
+import random
 
 import numpy as np
 
@@ -71,7 +71,7 @@ def displayTspHeaders(dict):
     @return
         {Tuple(numpy.ndarray, float)}   -- Indexes of the minimun distance path and the minimun distance
 """
-def runAcoTsp(space, iterations = 80, colony = 50, alpha = 1.0, beta = 1.0, del_tau = 1.0, rho = 0.5):
+def runAcoTsp(space, iterations = 10, colony = 70, alpha = 1, beta = 5.0, del_tau = 1.0, rho = 0.2):
     # [1] Find inverted distances for all nodes
     inv_distances = inverseDistances(space)
 
@@ -79,7 +79,7 @@ def runAcoTsp(space, iterations = 80, colony = 50, alpha = 1.0, beta = 1.0, del_
     inv_distances = inv_distances ** beta
 
     # Empty pheromones trail
-    pheromones = np.zeros((space.shape[0], space.shape[0]))
+    pheromones = np.zeros((space.shape[0], space.shape[0])) + 50/20012.90299838567
 
     # Empty minimum distance and path
     min_distance = None
@@ -106,7 +106,10 @@ def runAcoTsp(space, iterations = 80, colony = 50, alpha = 1.0, beta = 1.0, del_
                 # Calculate distance to the last node
                 distance += np.sqrt(((space[int(path[node])] - space[int(path[node - 1])]) ** 2).sum())
             print(distance)
-            # Update minimun distance and path if less nor non existent
+            for node in range(1, path.shape[0]):
+                # Update pheromones (releasing pheromones)
+                pheromones[path[node], path[node - 1]] += 1 / distance
+                pheromones[path[node - 1], path[node]] += 1 / distance
             if not min_distance or distance < min_distance:
                 min_distance = distance
                 min_path = path
@@ -183,12 +186,14 @@ def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
         # For each ant
         for ant in range(positions.shape[0]):
             # Probability to travel the nodes
-            next_location_probability = (inv_distances[positions[ant]] ** alpha + pheromones[positions[ant]] ** beta /
-                                         inv_distances[positions[ant]].sum() ** alpha + pheromones[
-                                             positions[ant]].sum() ** beta)
+            next_location_probability = (
+                    ((inv_distances[positions[ant]] ** alpha) * (pheromones[positions[ant]] ** beta)) /
+                    ((inv_distances[positions[ant]] ** alpha) * (pheromones[positions[ant]] ** beta)).sum()
+                                         )
 
             # Index to maximum probability node
-            next_position = np.argwhere(next_location_probability == np.amax(next_location_probability))[0][0]
+            next_position = np.argmax(next_location_probability) if random.randint(0, 1) == 1  else random.randint(0, next_location_probability.shape[0] -1)
+
 
             # Check if node has already been visited
             while next_position in paths[:, ant]:
@@ -200,9 +205,6 @@ def moveAnts(space, positions, inv_distances, pheromones, alpha, beta, del_tau):
 
             # Add node to path
             paths[node, ant] = next_position
-
-            # Update pheromones (releasing pheromones)
-            pheromones[node, next_position] = pheromones[node, next_position] + del_tau
 
     # Paths taken by the ants
     return np.swapaxes(paths, 0, 1)
