@@ -8,4 +8,6 @@
 使用TSP问题测试密态蚁群优化算法。
 
 经过测试，密态算法的结果与明文算法一致，证明了密态算法仍具有高可用性，同时保护了需要优化的问题和数据不泄露给第三方。
+![result](https://github.com/liukanshan1/Private-ACO/blob/main/results/berlin52-path-2.png?raw=true)
+
 
